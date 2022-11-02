@@ -83,9 +83,15 @@ class RUN:
         # 방향을 결정해야 하는데, 뭘 근거로? - 어떤 키가 눌렸기때문에?
         # 키 이벤트 정보가 필요.
         if event == RD:
-            self.dir += 1
+            if self.dir == 0:
+                self.dir = 1
+            else:
+                self.dir += 1
         elif event == LD:
-            self.dir -= 1
+            if self.dir == 0:
+                self.dir = -1
+            else:
+                self.dir -= 1
         elif event == RU:
             self.dir -= 1
         elif event == LU:
@@ -117,23 +123,17 @@ class RUN:
 class AUTO_RUN:
     @staticmethod
     def enter(self, event):
-        print('ENTER RUN')
+        print('ENTER AUTO')
+        if self.face_dir == -1:
+            self.dir = -1
+        elif self.face_dir == 1:
+            self.dir = 1
         # 방향을 결정해야 하는데, 뭘 근거로? - 어떤 키가 눌렸기때문에?
         # 키 이벤트 정보가 필요.
-        if event == RD:
-            self.dir += 1
-        elif event == LD:
-            self.dir -= 1
-        elif event == RU:
-            self.dir -= 1
-        elif event == LU:
-            self.dir += 1
-        pass
 
     @staticmethod
     def exit(self):
-        print('EXIT RUN')
-        self.face_dir = self.dir
+        print('EXIT AUTO')
         pass
 
     @staticmethod
@@ -141,15 +141,19 @@ class AUTO_RUN:
         self.frame = (self.frame + 1) % 8
         # x 좌표 변경해줘야함 cause 달리기
         self.x += self.dir
+        if self.x >= 800:
+            self.dir = -1
+        elif self.x <= 0:
+            self.dir = 1
         self.x = clamp(0, self.x, 800)
         pass
 
     @staticmethod
     def draw(self):
         if self.dir == -1:
-            self.image.clip_draw(self.frame*100, 0, 100, 100, self.x, self.y)
+            self.image.clip_draw(self.frame*100, 0, 100, 100, self.x, self.y, 200, 200)
         elif self.dir == 1:
-            self.image.clip_draw(self.frame*100, 100, 100, 100, self.x, self.y)
+            self.image.clip_draw(self.frame*100, 100, 100, 100, self.x, self.y, 200, 200)
 
 
 # 상태 변환 기술
